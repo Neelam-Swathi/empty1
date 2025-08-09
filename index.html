@@ -1,11 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RideX - Simple Ride Hailing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/c1819aaa25.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>Swathi Neelam</h1>
+  <div id="app" class="app">
+    <!-- Header / Navigation -->
+    <header class="top-nav">
+      <div class="nav-left">
+        <button id="menuToggle" aria-label="Open menu" class="icon-btn hide-on-desktop">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="brand" aria-label="RideX Home">
+          <div class="brand-logo" role="img" aria-label="RideX logo"></div>
+          <span class="brand-name">RideX</span>
+        </div>
+      </div>
+      <nav class="main-menu" id="mainMenu">
+        <button class="menu-link" data-target="section-booking" aria-label="Go to Booking">Home</button>
+        <button class="menu-link" data-target="section-tracking" aria-label="Go to Live Tracking">Track</button>
+        <button class="menu-link" data-target="section-payment" aria-label="Go to Payment">Pay</button>
+        <button class="menu-link" data-target="section-history" aria-label="Go to Ride History">History</button>
+      </nav>
+      <div class="nav-right">
+        <div class="dark-toggle" title="Toggle dark mode">
+          <input type="checkbox" id="darkModeToggle" aria-label="Toggle dark mode" />
+          <label for="darkModeToggle" class="toggle-label">
+            <i class="fa-solid fa-moon"></i>
+          </label>
+        </div>
+        <button id="profileBtn" class="icon-btn" aria-label="Open profile">
+          <i class="fa-solid fa-user"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Promo Banner -->
+    <section class="promo" aria-label="Promotions">
+      <div class="promo-slider">
+        <div class="promo-item">Use code <strong>SAVE20</strong> to get 20% off up to ₹40</div>
+        <div class="promo-item">First ride? Try <strong>FIRST50</strong> and save ₹50</div>
+        <div class="promo-item">Daily saver: <strong>UBER10</strong> gets 10% off up to ₹30</div>
+      </div>
+      <div class="promo-actions">
+        <input id="couponInput" class="input" type="text" placeholder="Enter coupon code" aria-label="Coupon code" />
+        <button id="applyCouponBtn" class="btn btn-secondary">Apply</button>
+      </div>
+    </section>
+
+    <main class="content">
+      <!-- Booking Section -->
+      <section id="section-booking" class="page active" aria-label="Booking">
+        <div class="grid booking-grid">
+          <div class="booking-card card">
+            <h2 class="card-title">Book a Ride</h2>
+
+            <div class="input-group">
+              <label for="pickupInput"><i class="fa-solid fa-location-dot"></i> Pickup location</label>
+              <div class="input-with-icon">
+                <input id="pickupInput" class="input" type="text" placeholder="e.g., Hitech City, Hyderabad" required />
+                <button id="useCurrentBtn" class="icon-btn" title="Use current location">
+                  <i class="fa-solid fa-crosshairs"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="dropInput"><i class="fa-solid fa-flag-checkered"></i> Drop-off location</label>
+              <div class="input-with-icon">
+                <input id="dropInput" class="input" type="text" placeholder="e.g., Secunderabad Station" required />
+                <button id="swapBtn" class="icon-btn" title="Swap pickup and drop">
+                  <i class="fa-solid fa-right-left"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="row two-cols">
+              <div class="input-group">
+                <label for="vehicleType"><i class="fa-solid fa-motorcycle"></i> Vehicle type</label>
+                <select id="vehicleType" class="input">
+                  <option value="bike">Bike • Base ₹20 • ₹8/km</option>
+                  <option value="auto">Auto • Base ₹30 • ₹10/km</option>
+                  <option value="car" selected>Car • Base ₹50 • ₹14/km</option>
+                  <option value="suv">SUV • Base ₹70 • ₹18/km</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label><i class="fa-solid fa-business-time"></i> Ride type</label>
+                <div class="segmented">
+                  <label class="chip">
+                    <input type="radio" name="rideType" value="now" checked />
+                    <span>Immediate</span>
+                  </label>
+                  <label class="chip">
+                    <input type="radio" name="rideType" value="schedule" />
+                    <span>Schedule</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div id="scheduleRow" class="row two-cols hidden">
+              <div class="input-group">
+                <label for="scheduleDate">Date</label>
+                <input id="scheduleDate" type="date" class="input" />
+              </div>
+              <div class="input-group">
+                <label for="scheduleTime">Time</label>
+                <input id="scheduleTime" type="time" class="input" />
+              </div>
+            </div>
+
+            <div class="row actions-row">
+              <button id="fareBtn" class="btn btn-primary">
+                <span class="btn-content"><i class="fa-solid fa-indian-rupee-sign"></i> Get Fare Estimate</span>
+                <span class="btn-loader spinner hidden"></span>
+              </button>
+              <button id="bookBtn" class="btn btn-gradient" disabled>
+                <i class="fa-solid fa-taxi"></i> Book Now
+              </button>
+            </div>
+
+            <div id="estimateCard" class="estimate card subtle hidden" aria-live="polite"></div>
+          </div>
+
+          <div class="options card">
+            <h3 class="card-title">Ride options</h3>
+            <div class="options-grid">
+              <div class="option-item">
+                <div class="option-icon"><i class="fa-solid fa-motorcycle"></i></div>
+                <div class="option-body">
+                  <div class="option-title">Bike</div>
+                  <div class="option-sub">Fast and affordable for one</div>
+                </div>
+              </div>
+              <div class="option-item">
+                <div class="option-icon"><i class="fa-solid fa-car-side"></i></div>
+                <div class="option-body">
+                  <div class="option-title">Auto</div>
+                  <div class="option-sub">Value for short trips</div>
+                </div>
+              </div>
+              <div class="option-item">
+                <div class="option-icon"><i class="fa-solid fa-car"></i></div>
+                <div class="option-body">
+                  <div class="option-title">Car</div>
+                  <div class="option-sub">Comfort for up to 4</div>
+                </div>
+              </div>
+              <div class="option-item">
+                <div class="option-icon"><i class="fa-solid fa-truck-monster"></i></div>
+                <div class="option-body">
+                  <div class="option-title">SUV</div>
+                  <div class="option-sub">Spacious for groups</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tracking Section -->
+      <section id="section-tracking" class="page" aria-label="Live Tracking">
+        <div class="grid tracking-grid">
+          <div class="card map-card">
+            <div class="map" id="map">
+              <!-- Static map placeholder background via CSS -->
+              <div id="driverIcon" class="driver-icon" title="Driver"></div>
+              <div id="pickupMarker" class="marker pickup" title="Pickup"></div>
+              <div id="dropMarker" class="marker drop" title="Drop"></div>
+            </div>
+            <div class="status-bar">
+              <div id="rideStatus" class="status-text">Waiting for driver status...</div>
+              <div class="progress">
+                <div id="statusProgress" class="progress-inner" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card driver-card">
+            <div class="driver-row">
+              <div class="avatar" id="driverAvatar" aria-hidden="true"></div>
+              <div class="driver-meta">
+                <div class="driver-name" id="driverName">Driver</div>
+                <div class="driver-sub">
+                  <span id="driverRating"><i class="fa-solid fa-star"></i> 4.9</span>
+                  <span>•</span>
+                  <span id="vehicleNumber">TS09 AB 1234</span>
+                </div>
+              </div>
+              <div class="driver-actions">
+                <button id="callDriverBtn" class="btn btn-secondary"><i class="fa-solid fa-phone"></i> Contact</button>
+              </div>
+            </div>
+            <div class="otp-row">
+              <div>OTP: <strong id="rideOtp">—</strong></div>
+              <div>ETA: <strong id="rideEta">—</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Payment Section -->
+      <section id="section-payment" class="page" aria-label="Payment">
+        <div class="grid payment-grid">
+          <div class="card">
+            <h2 class="card-title">Payment</h2>
+            <div class="pay-options">
+              <label class="option-chip">
+                <input type="radio" name="payMethod" value="UPI" checked />
+                <span><i class="fa-brands fa-google-pay"></i> UPI</span>
+              </label>
+              <label class="option-chip">
+                <input type="radio" name="payMethod" value="Card" />
+                <span><i class="fa-regular fa-credit-card"></i> Card</span>
+              </label>
+              <label class="option-chip">
+                <input type="radio" name="payMethod" value="Cash" />
+                <span><i class="fa-solid fa-money-bill-wave"></i> Cash</span>
+              </label>
+            </div>
+
+            <div id="upiForm" class="pay-form">
+              <div class="input-group">
+                <label for="upiId">UPI ID</label>
+                <input id="upiId" class="input" type="text" placeholder="name@bank" />
+              </div>
+            </div>
+
+            <div id="cardForm" class="pay-form hidden">
+              <div class="row two-cols">
+                <div class="input-group">
+                  <label for="cardNumber">Card number</label>
+                  <input id="cardNumber" class="input" type="text" placeholder="1234 5678 9012 3456" maxlength="19" />
+                </div>
+                <div class="input-group">
+                  <label for="cardName">Name on card</label>
+                  <input id="cardName" class="input" type="text" placeholder="Full name" />
+                </div>
+              </div>
+              <div class="row two-cols">
+                <div class="input-group">
+                  <label for="cardExpiry">Expiry</label>
+                  <input id="cardExpiry" class="input" type="text" placeholder="MM/YY" maxlength="5" />
+                </div>
+                <div class="input-group">
+                  <label for="cardCvv">CVV</label>
+                  <input id="cardCvv" class="input" type="password" placeholder="123" maxlength="4" />
+                </div>
+              </div>
+            </div>
+
+            <div class="row actions-row">
+              <button id="payBtn" class="btn btn-gradient">
+                <span class="btn-content"><i class="fa-solid fa-check"></i> Pay Now</span>
+                <span class="btn-loader spinner hidden"></span>
+              </button>
+            </div>
+
+            <div id="paymentSuccess" class="success hidden" aria-live="polite">
+              <div class="checkmark">
+                <div class="checkmark-circle"></div>
+                <div class="checkmark-stem"></div>
+                <div class="checkmark-kick"></div>
+              </div>
+              <p>Payment Successful</p>
+            </div>
+          </div>
+
+          <div id="receiptCard" class="card subtle hidden">
+            <h3 class="card-title">Ride Receipt</h3>
+            <div class="receipt-grid">
+              <div>
+                <div class="label">Date</div>
+                <div id="receiptDate" class="value">—</div>
+              </div>
+              <div>
+                <div class="label">Route</div>
+                <div id="receiptRoute" class="value">—</div>
+              </div>
+              <div>
+                <div class="label">Vehicle</div>
+                <div id="receiptVehicle" class="value">—</div>
+              </div>
+              <div>
+                <div class="label">Distance</div>
+                <div id="receiptDistance" class="value">—</div>
+              </div>
+              <div>
+                <div class="label">Fare</div>
+                <div id="receiptFare" class="value">—</div>
+              </div>
+              <div>
+                <div class="label">Payment</div>
+                <div id="receiptPayment" class="value">—</div>
+              </div>
+            </div>
+            <div class="row actions-row">
+              <button id="goHistoryBtn" class="btn btn-secondary">View History</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Section -->
+      <section id="section-history" class="page" aria-label="Ride History">
+        <div class="card">
+          <div class="history-header">
+            <h2 class="card-title">Ride History</h2>
+            <div class="row two-cols">
+              <div class="input-group">
+                <label for="searchLocation">Search by location</label>
+                <input id="searchLocation" class="input" type="text" placeholder="Pickup or drop" />
+              </div>
+              <div class="input-group">
+                <label for="searchDate">On/After date</label>
+                <input id="searchDate" class="input" type="date" />
+              </div>
+            </div>
+            <div class="row actions-row">
+              <button id="clearFiltersBtn" class="btn btn-secondary">Clear Filters</button>
+              <button id="clearHistoryBtn" class="btn btn-danger">Clear History</button>
+            </div>
+          </div>
+          <ul id="historyList" class="history-list" aria-live="polite"></ul>
+          <div id="historyEmpty" class="empty-state hidden">No rides yet. Book your first ride!</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>© <span id="yearNow"></span> RideX</div>
+      <div class="footer-links">
+        <a href="#" role="button">Help</a>
+        <a href="#" role="button">Safety</a>
+        <a href="#" role="button">Terms</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Generic Modal -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Ride Confirmed</h3>
+        <button id="modalClose" class="icon-btn" aria-label="Close modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="modalBody" class="modal-body">
+        <div class="confirm-grid">
+          <div class="confirm-row"><span>Driver</span><strong id="confirmDriver">—</strong></div>
+          <div class="confirm-row"><span>Vehicle</span><strong id="confirmVehicle">—</strong></div>
+          <div class="confirm-row"><span>OTP</span><strong id="confirmOtp">—</strong></div>
+          <div class="confirm-row"><span>ETA</span><strong id="confirmEta">—</strong></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="startTrackingBtn" class="btn btn-gradient">Start Tracking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="profileModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h3 id="profileTitle">Your Profile</h3>
+        <button id="profileClose" class="icon-btn" aria-label="Close profile"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="row two-cols">
+          <div class="input-group">
+            <label for="profileName">Name</label>
+            <input id="profileName" class="input" type="text" placeholder="Your name" />
+          </div>
+          <div class="input-group">
+            <label for="profilePhone">Phone</label>
+            <input id="profilePhone" class="input" type="tel" placeholder="99999 99999" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="saveProfileBtn" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
